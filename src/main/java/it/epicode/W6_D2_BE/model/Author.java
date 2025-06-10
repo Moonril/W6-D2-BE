@@ -12,6 +12,6 @@ public class Author {
     private String cognome;
     private LocalDate dataNascita;
     private String email;
-    // private boh avatar;
+    private String avatar;
 
 }

@@ -7,7 +7,7 @@ public class Blog {
     private int id;
     private String categoria;
     private String titolo;
-    //  private cover;
+    private String cover;
     private String contenuto;
     private int tempoDiLettura;
 }

@@ -24,6 +24,7 @@ public class BlogService {
 
     public Blog saveBlog(Blog blog){
         blog.setId(new Random().nextInt(1,2000));
+        blog.setCover("https://picsum.photos/200/300");
         blogs.add(blog);
         return blog;
     }

@@ -30,14 +30,15 @@ public class AuthorService {
     }
 
     public Author updateAuthor(int id, Author author) throws AuthorNotFoundExcpetion{
-        Author authorToFind = getAuthor(id);
+        Author authorToUpdate = getAuthor(id);
 
-        authorToFind.setNome(author.getNome());
-        authorToFind.setCognome(author.getCognome());
-        authorToFind.setEmail(author.getEmail());
-        authorToFind.setDataNascita(author.getDataNascita());
+        authorToUpdate.setNome(author.getNome());
+        authorToUpdate.setCognome(author.getCognome());
+        authorToUpdate.setEmail(author.getEmail());
+        authorToUpdate.setDataNascita(author.getDataNascita());
+        authorToUpdate.setAvatar("https://ui-avatars.com/api/?name=" + author.getNome()+ "+" + author.getCognome());
 
-        return authorToFind;
+        return authorToUpdate;
     }
 
     public void deleteAuthor(int id) throws AuthorNotFoundExcpetion{

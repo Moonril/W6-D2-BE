@@ -38,14 +38,14 @@ public class BlogService {
     }
 
     public Blog updateBlog(int id, Blog blog) throws BlogNotFoundException{
-        Blog blogToFind = getBlog(id);
+        Blog blogToUpdate = getBlog(id);
 
-        blogToFind.setTitolo(blog.getTitolo());
-        blogToFind.setContenuto(blog.getContenuto());
-        blogToFind.setCategoria(blog.getCategoria());
-        blogToFind.setTempoDiLettura(blog.getTempoDiLettura());
+        blogToUpdate.setTitolo(blog.getTitolo());
+        blogToUpdate.setContenuto(blog.getContenuto());
+        blogToUpdate.setCategoria(blog.getCategoria());
+        blogToUpdate.setTempoDiLettura(blog.getTempoDiLettura());
 
-        return blogToFind;
+        return blogToUpdate;
     }
 
     public void deleteBlog(int id) throws BlogNotFoundException{

@@ -1,7 +1,12 @@
 package it.epicode.W6_D2_BE.service;
 
-import it.epicode.W6_D2_BE.exceptions.BlogNotFoundException;
+import com.cloudinary.Cloudinary;
+import it.epicode.W6_D2_BE.dto.BlogDto;
+import it.epicode.W6_D2_BE.exceptions.NotFoundException;
+import it.epicode.W6_D2_BE.model.Author;
 import it.epicode.W6_D2_BE.model.Blog;
+import it.epicode.W6_D2_BE.repository.BlogRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,39 +24,61 @@ DELETE /blogPosts /123 => cancella lo specifico blog post
 
 @Service
 public class BlogService {
-    private List<Blog> blogs = new ArrayList<>();
+
+    @Autowired
+    private BlogRepository blogRepository;
+
+    @Autowired
+    private AuthorService authorService;
 
 
-    public Blog saveBlog(Blog blog){
-        blog.setId(new Random().nextInt(1,2000));
-        blog.setCover("https://picsum.photos/200/300");
-        blogs.add(blog);
-        return blog;
+
+
+    public Blog saveBlog(BlogDto blogDto) throws NotFoundException {
+        Author author = authorService.getAuthor(blogDto.getAuthorId());
+
+        Blog blog = new Blog();
+        blog.setTitolo(blogDto.getTitolo());
+        blog.setContenuto(blogDto.getContenuto());
+        blog.setCategoria(blogDto.getCategoria());
+        blog.setTempoDiLettura(blogDto.getTempoDiLettura());
+        blog.setAutore(author);
+
+        return  blogRepository.save(blog);
+
+
     }
 
-    public Blog getBlog(int id) throws BlogNotFoundException{
-        return blogs.stream().filter(blog -> blog.getId() == id).findFirst().orElseThrow(() -> new BlogNotFoundException("Nessun blog trovato con id: " + id));
+
+
+    public Blog getBlog(int id) throws NotFoundException{
+        return blogRepository.findById(id).orElseThrow(() -> new NotFoundException("Blog con id: " + id + " non trovato"));
     }
 
     public List<Blog> getAllBLogs(){
-        return blogs;
+        return blogRepository.findAll();
     }
 
-    public Blog updateBlog(int id, Blog blog) throws BlogNotFoundException{
+    public Blog updateBlog(int id, BlogDto blogDto) throws NotFoundException{
         Blog blogToUpdate = getBlog(id);
 
-        blogToUpdate.setTitolo(blog.getTitolo());
-        blogToUpdate.setContenuto(blog.getContenuto());
-        blogToUpdate.setCategoria(blog.getCategoria());
-        blogToUpdate.setTempoDiLettura(blog.getTempoDiLettura());
+        blogToUpdate.setTitolo(blogDto.getTitolo());
+        blogToUpdate.setContenuto(blogDto.getContenuto());
+        blogToUpdate.setCategoria(blogDto.getCategoria());
+        blogToUpdate.setTempoDiLettura(blogDto.getTempoDiLettura());
 
-        return blogToUpdate;
+        if(blogToUpdate.getAutore().getId()!=blogDto.getAuthorId()){
+            Author author = authorService.getAuthor(blogDto.getAuthorId());
+            blogToUpdate.setAutore(author);
+        }
+
+        return blogRepository.save(blogToUpdate);
     }
 
-    public void deleteBlog(int id) throws BlogNotFoundException{
+    public void deleteBlog(int id) throws NotFoundException{
         Blog blogToDelete = getBlog(id);
 
-        blogs.remove(blogToDelete);
+        blogRepository.delete(blogToDelete);
     }
 
 }
